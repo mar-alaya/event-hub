@@ -19,8 +19,80 @@
     </header>
 
     <main>
+      <section id="create-event">
+        <button class="btn" id="new-event-btn" onclick="my_modal_1.showModal()">
+          Neues Event
+        </button>
+        <dialog id="my_modal_1" class="modal">
+          <div class="modal-box">
+            <form method="dialog" id="eventForm">
+              <div>
+                <label for="title">Titel</label>
+                <input type="text" id="title" />
+              </div>
+              <div>
+                <label for="description">Beschreibung</label>
+                <textarea id="description"></textarea>
+              </div>
+              <div>
+                <label for="date">Datum</label>
+                <input type="date" id="date" />
+              </div>
+              <div>
+                <label for="time">Uhrzeit</label>
+                <input type="time" id="time" />
+              </div>
+              <div>
+                <label for="location">Ort</label>
+                <input type="text" id="location" />
+              </div>
+              <div>
+                <label for="category">Kategorie</label>
+                <select id="category">
+                  <option value="">Bitte auswählen</option>
+                  <option value="Workshop">Workshop</option>
+                  <option value="Meetup">Meetup</option>
+                  <option value="Schulung">Schulung</option>
+                  <option value="Networking">Networking</option>
+                  <option value="Intern">Intern</option>
+                </select>
+              </div>
+              <div>
+                <label for="max">Maximale Teilnehmer</label>
+                <input type="number" id="max" min="1" />
+                <p id="error"></p>
+              </div>
+              <button id="btn_abbrechen" class="btn">Abbrechen</button>
+              <button type="submit" id="btn_speichern" class="btn">
+                Speichern
+              </button>
+            </form>
+          </div>
+        </dialog>
+      </section>
+      <!-- Suche / Filter -->
       <section>
         <div id="events-container"></div>
+        <div class="modal-box">
+          <input id="search" placeholder="Event suchen..." />
+          <select id="categoryFilter">
+            <option>Alle Kategorien</option>
+          </select>
+          <select id="statusFilter">
+            <option>Alle Status</option>
+            <option>Geplant</option>
+            <option>Offen</option>
+            <option>Ausgebucht</option>
+            <option>Abgeschlossen</option>
+          </select>
+          <select id="sort">
+            <option value="dateAsc">Datum ↑</option>
+            <option value="dateDesc">Datum ↓</option>
+            <option value="title">Titel A-Z</option>
+            <option value="people">Teilnehmer</option>
+          </select>
+        </div>
+        <div id="events" class="events"></div>
       </section>
     </main>
 
