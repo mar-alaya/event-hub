@@ -15,87 +15,174 @@
   </head>
   <body>
     <header>
-      <h1>Event Hub von Firma</h1>
+      <nav>
+        <div class="navbar bg-base-100 shadow-sm p-4">
+          <div class="navbar-start">
+            <a class="btn btn-ghost text-xl font-bold">EventHub</a>
+          </div>
+          <div class="navbar-end">
+            <section id="create-event">
+              <button
+                class="btn font-semibold bg-[#bca1eb]"
+                id="new-event-btn"
+                onclick="my_modal_1.showModal()"
+              >
+                Neues Event
+              </button>
+              <dialog id="my_modal_1" class="modal">
+                <div class="modal-box">
+                  <form method="dialog" id="eventForm">
+                    <div>
+                      <label for="title">Titel</label>
+                      <input type="text" id="title" />
+                    </div>
+                    <div>
+                      <label for="description">Beschreibung</label>
+                      <textarea id="description"></textarea>
+                    </div>
+                    <div>
+                      <label for="date">Datum</label>
+                      <input type="date" id="date" />
+                    </div>
+                    <div>
+                      <label for="time">Uhrzeit</label>
+                      <input type="time" id="time" />
+                    </div>
+                    <div>
+                      <label for="location">Ort</label>
+                      <input type="text" id="location" />
+                    </div>
+                    <div>
+                      <label for="category">Kategorie</label>
+                      <select id="category">
+                        <option value="">Bitte auswählen</option>
+                        <option value="Workshop">Workshop</option>
+                        <option value="Meetup">Meetup</option>
+                        <option value="Schulung">Schulung</option>
+                        <option value="Networking">Networking</option>
+                        <option value="Intern">Intern</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label for="max">Maximale Teilnehmer</label>
+                      <input type="number" id="max" min="1" />
+                      <p id="error"></p>
+                    </div>
+                    <button id="btn_abbrechen" class="btn">Abbrechen</button>
+                    <button type="submit" id="btn_speichern" class="btn">
+                      Speichern
+                    </button>
+                  </form>
+                </div>
+              </dialog>
+            </section>
+          </div>
+        </div>
+      </nav>
+      <section
+        class="hero min-h-80 min-w-full bg-center bg-cover"
+        style="
+          background-image: url(http://images.unsplash.com/photo-1554034483-04fda0d3507b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);
+        "
+      >
+        <div class="hero-content text-neutral-content text-center">
+          <div class="max-w-md">
+            <h1 class="mb-5 text-5xl font-bold">Unsere nächste Events</h1>
+            <p class="mb-5 font-semibold">
+              Informiere dich über unsere kommenden Veranstaltungen, nimm daran
+              teil oder richte eine neue ein.
+            </p>
+          </div>
+        </div>
+      </section>
     </header>
 
     <main>
-      <section id="create-event">
-        <button class="btn" id="new-event-btn" onclick="my_modal_1.showModal()">
-          Neues Event
-        </button>
-        <dialog id="my_modal_1" class="modal">
-          <div class="modal-box">
-            <form method="dialog" id="eventForm">
-              <div>
-                <label for="title">Titel</label>
-                <input type="text" id="title" />
-              </div>
-              <div>
-                <label for="description">Beschreibung</label>
-                <textarea id="description"></textarea>
-              </div>
-              <div>
-                <label for="date">Datum</label>
-                <input type="date" id="date" />
-              </div>
-              <div>
-                <label for="time">Uhrzeit</label>
-                <input type="time" id="time" />
-              </div>
-              <div>
-                <label for="location">Ort</label>
-                <input type="text" id="location" />
-              </div>
-              <div>
-                <label for="category">Kategorie</label>
-                <select id="category">
-                  <option value="">Bitte auswählen</option>
-                  <option value="Workshop">Workshop</option>
-                  <option value="Meetup">Meetup</option>
-                  <option value="Schulung">Schulung</option>
-                  <option value="Networking">Networking</option>
-                  <option value="Intern">Intern</option>
-                </select>
-              </div>
-              <div>
-                <label for="max">Maximale Teilnehmer</label>
-                <input type="number" id="max" min="1" />
-                <p id="error"></p>
-              </div>
-              <button id="btn_abbrechen" class="btn">Abbrechen</button>
-              <button type="submit" id="btn_speichern" class="btn">
-                Speichern
-              </button>
-            </form>
+      <section id="dashboard">
+        <div class="stats shadow">
+          <div class="stat place-items-center">
+            <div class="stat-title">Gesamtzahl Events</div>
+            <div id="dashGesamt" class="stat-value">0</div>
           </div>
-        </dialog>
+
+          <div class="stat place-items-center">
+            <div class="stat-title">Offene Events</div>
+            <div id="dashFrei" class="stat-value text-success">0</div>
+          </div>
+
+          <div class="stat place-items-center">
+            <div class="stat-title">Gesamte Teilnehmer</div>
+            <div id="dashTeilnehmer" class="stat-value">0</div>
+          </div>
+
+          <div class="stat place-items-center">
+            <div class="stat-title">Ausgebuchte Events</div>
+            <div id="dashVoll" class="stat-value text-error">0</div>
+          </div>
+        </div>
       </section>
-      <!-- Suche / Filter -->
+
+      <section>
+        <div>
+          <label class="input">
+            <svg
+              class="h-[1em] opacity-50"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+            >
+              <g
+                stroke-linejoin="round"
+                stroke-linecap="round"
+                stroke-width="2.5"
+                fill="none"
+                stroke="currentColor"
+              >
+                <circle cx="11" cy="11" r="8"></circle>
+                <path d="m21 21-4.3-4.3"></path>
+              </g>
+            </svg>
+            <input id="suchen" type="search" placeholder="Suche Event" />
+          </label>
+        </div>
+      </section>
+
+      <section id="event-sortieren">
+        <label for="category">Events sortieren:</label>
+        <select id="sortier-input">
+          <option value="" selected>Bitte auswählen</option>
+          <option value="aufsteigend">Datum aufsteigend</option>
+          <option value="absteigend">Datum absteigend</option>
+          <option value="title">Title A-Z</option>
+          <option value="teilnehmer">Teilnehmer Anzahl</option>
+        </select>
+      </section>
+
+      <!-- Filter -->
+      <section class="my-4">
+        <select id="categoryFilter" class="select">
+          <option value="alle">Alle Kategorien</option>
+          <option value="Workshop">Workshop</option>
+          <option value="Meetup">Meetup</option>
+          <option value="Schulung">Schulung</option>
+          <option value="Networking">Networking</option>
+          <option value="Intern">Intern</option>
+        </select>
+      </section>
+
       <section>
         <div id="events-container"></div>
-        <div class="modal-box">
-          <input id="search" placeholder="Event suchen..." />
-          <select id="categoryFilter">
-            <option>Alle Kategorien</option>
-          </select>
-          <select id="statusFilter">
-            <option>Alle Status</option>
-            <option>Geplant</option>
-            <option>Offen</option>
-            <option>Ausgebucht</option>
-            <option>Abgeschlossen</option>
-          </select>
-          <select id="sort">
-            <option value="dateAsc">Datum ↑</option>
-            <option value="dateDesc">Datum ↓</option>
-            <option value="title">Titel A-Z</option>
-            <option value="people">Teilnehmer</option>
-          </select>
-        </div>
-        <div id="events" class="events"></div>
       </section>
     </main>
 
-    <footer></footer>
+    <footer
+      class="footer sm:footer-horizontal footer-center bg-base-300 text-base-content p-4"
+    >
+      <aside>
+        <p>
+          Copyright ©2026 - All right reserved by Aylin-Sude Altintop, Laxmima
+          Dostert and Mar Alaya Melia
+        </p>
+      </aside>
+    </footer>
   </body>
 </html>

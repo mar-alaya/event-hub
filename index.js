@@ -3,45 +3,45 @@ let events = [
     eventId: 1,
     title: "Meeting",
     beschreibung: "Presentation",
-    datum: "30/09/2026",
+    datum: "2026-09-30",
     uhrzeit: "10:00",
     ort: "Trier",
     kategorie: "Meetup",
-    maxTeilnehmer: 500,
+    maxTeilnehmer: 100,
     aktuellTeilnehmer: 3,
     status: "offen",
   },
   {
     eventId: 2,
-    title: "Meeting",
+    title: "JavaScript",
     beschreibung: "Presentation",
-    datum: "30/09/2026",
-    uhrzeit: "10:00",
-    ort: "Trier",
+    datum: "2026-12-31",
+    uhrzeit: "15:00",
+    ort: "Hamburg",
     kategorie: "Workshop",
-    maxTeilnehmer: 500,
-    aktuellTeilnehmer: 3,
+    maxTeilnehmer: 95,
+    aktuellTeilnehmer: 88,
     status: "offen",
   },
   {
     eventId: 3,
-    title: "Meeting",
-    beschreibung: "Presentation",
-    datum: "30/09/2026",
+    title: "React",
+    beschreibung: "Grundlagen",
+    datum: "2026-10-05",
     uhrzeit: "10:00",
-    ort: "Trier",
+    ort: "Berlin",
     kategorie: "Schulung",
-    maxTeilnehmer: 500,
-    aktuellTeilnehmer: 3,
-    status: "offen",
+    maxTeilnehmer: 50,
+    aktuellTeilnehmer: 50,
+    status: "ausgebucht",
   },
   {
     eventId: 4,
     title: "Meeting",
     beschreibung: "Presentation",
-    datum: "30/09/2026",
+    datum: "2026-10-30",
     uhrzeit: "10:00",
-    ort: "Trier",
+    ort: "Berlin",
     kategorie: "Networking",
     maxTeilnehmer: 500,
     aktuellTeilnehmer: 3,
@@ -51,12 +51,48 @@ let events = [
     eventId: 5,
     title: "Meeting",
     beschreibung: "Presentation",
-    datum: "30/09/2026",
+    datum: "2027-01-13",
     uhrzeit: "10:00",
     ort: "Trier",
     kategorie: "Intern",
-    maxTeilnehmer: 500,
-    aktuellTeilnehmer: 3,
+    maxTeilnehmer: 13,
+    aktuellTeilnehmer: 9,
+    status: "offen",
+  },
+  {
+    eventId: 6,
+    title: "JavaScript",
+    beschreibung: "Workshop",
+    datum: "2026-11-05",
+    uhrzeit: "10:00",
+    ort: "Köln",
+    kategorie: "Workshop",
+    maxTeilnehmer: 15,
+    aktuellTeilnehmer: 13,
+    status: "offen",
+  },
+  {
+    eventId: 7,
+    title: "JavaScript",
+    beschreibung: "Grundlagen",
+    datum: "2026-12-03",
+    uhrzeit: "10:00",
+    ort: "Köln",
+    kategorie: "Schulung",
+    maxTeilnehmer: 10,
+    aktuellTeilnehmer: 10,
+    status: "ausgebucht",
+  },
+  {
+    eventId: 8,
+    title: "Advanced JavaScript",
+    beschreibung: "Presentation",
+    datum: "2027-02-10",
+    uhrzeit: "10:00",
+    ort: "Frankfurt",
+    kategorie: "Networking",
+    maxTeilnehmer: 50,
+    aktuellTeilnehmer: 23,
     status: "offen",
   },
 ];
@@ -65,21 +101,84 @@ const eventContainer = document.querySelector("#events-container");
 const eventInput = document.querySelector("#event-name");
 const modal = document.querySelector("#my_modal_1");
 const newEventButton = document.querySelector("#new-event-btn");
+const input_save = document.querySelector("#btn_speichern");
+const suchenInput = document.querySelector("#suchen");
+suchenInput.addEventListener("input", render_events);
+const dashGesamtText = document.querySelector("#dashGesamt");
+const dashFreiText = document.querySelector("#dashFrei");
+const dashTeilnehmerText = document.querySelector("#dashTeilnehmer");
+const dashVollText = document.querySelector("#dashVoll");
+const categoryFilter = document.querySelector("#categoryFilter");
+categoryFilter.addEventListener("change", render_events);
 
+loadEvents();
 render_events();
 
+// Render Stats
+
+function render_stats() {
+  dashGesamtText.innerText = events.length;
+
+  const dashFrei = events.filter((item) => {
+    return item.status.toLocaleLowerCase() === "offen";
+  });
+  dashFreiText.innerText = dashFrei.length;
+
+  // Dashboard
+
+  let teilnehmer = 0;
+  events.forEach((item) => {
+    teilnehmer = teilnehmer + Number(item.aktuellTeilnehmer);
+  });
+  dashTeilnehmerText.innerText = teilnehmer;
+
+  const dashVoll = events.filter((item) => {
+    return (
+      item.status.toLocaleLowerCase() === "ausgebucht" ||
+      Number(item.aktuellTeilnehmer) >= Number(item.maxTeilnehmer)
+    );
+  });
+  dashVollText.innerText = dashVoll.length;
+}
+
 newEventButton.addEventListener("click", () => {
+  editedEvent = null;
   resetForm();
+  modal.showModal();
 });
 
+// Render Events & Suchbegriff
+
 function render_events() {
+  render_stats();
   eventContainer.innerHTML = "";
 
-  events.forEach((event) => {
+  const suchbegriff = suchenInput.value.toLowerCase().trim();
+
+  const gefundeneEvents = events.filter((event) =>
+    event.title.toLowerCase().includes(suchbegriff),
+  );
+
+  // Filter
+  const kategorie = categoryFilter.value;
+  const gefiltert = gefundeneEvents.filter((event) => {
+    return kategorie === "alle" || event.kategorie === kategorie;
+  });
+
+  if (gefiltert.length === 0) {
+    const keine_treffer = document.createElement("p");
+    keine_treffer.innerText = "Keine Events gefunden.";
+    eventContainer.appendChild(keine_treffer);
+    return;
+  }
+
+  gefiltert.forEach((event) => {
     const card = generate_event_card(event);
     eventContainer.appendChild(card);
   });
 }
+
+// Generate Card
 
 function generate_event_card(eventItem) {
   const {
@@ -100,6 +199,7 @@ function generate_event_card(eventItem) {
 
   const h2 = document.createElement("h2");
   h2.innerText = title;
+  h2.classList.add("card-title");
   event_card.appendChild(h2);
 
   const besch = document.createElement("p");
@@ -134,6 +234,12 @@ function generate_event_card(eventItem) {
   stat.innerText = status;
   event_card.appendChild(stat);
 
+  if (eventItem.status === "offen") {
+    stat.classList.add("badge-offen");
+  } else {
+    stat.classList.add("badge-ausgebucht");
+  }
+
   const bearb_btn = document.createElement("button");
   bearb_btn.innerText = "Bearbeiten";
   bearb_btn.classList.add("btn");
@@ -143,6 +249,8 @@ function generate_event_card(eventItem) {
     modal.showModal();
     editEvent(eventItem);
   });
+
+  // Events löschen Flow
 
   const btn_delete = document.createElement("button");
   btn_delete.innerText = "Löschen";
@@ -163,48 +271,113 @@ function generate_event_card(eventItem) {
     }
   }
 
+  // Teilnehmer Verwaltung
+
   const add_participants = document.createElement("button");
   add_participants.innerText = "+ Teilnehmer";
   add_participants.classList.add("btn");
   event_card.appendChild(add_participants);
+
+  add_participants.addEventListener("click", () => {
+    if (eventItem.aktuellTeilnehmer < eventItem.maxTeilnehmer) {
+      eventItem.aktuellTeilnehmer += 1;
+    }
+
+    if (eventItem.aktuellTeilnehmer >= eventItem.maxTeilnehmer) {
+      eventItem.status = "Ausgebucht";
+    } else {
+      eventItem.status = "offen";
+    }
+
+    render_events();
+    saveEvents();
+  });
 
   const quit_participants = document.createElement("button");
   quit_participants.innerText = "- Teilnehmer";
   quit_participants.classList.add("btn");
   event_card.appendChild(quit_participants);
 
+  quit_participants.addEventListener("click", () => {
+    if (eventItem.aktuellTeilnehmer > 0) {
+      eventItem.aktuellTeilnehmer -= 1;
+    }
+
+    if (eventItem.aktuellTeilnehmer < eventItem.maxTeilnehmer) {
+      eventItem.status = "offen";
+    }
+
+    render_events();
+    saveEvents();
+  });
+
   return event_card;
 }
 
+// Event Erstellung & Bearbeitung Flow
+
+let editedEvent = null;
+
 function editEvent(eventItem) {
-  const input_title = document.querySelector("#title");
-  const input_description = document.querySelector("#description");
-  const input_date = document.querySelector("#date");
-  const input_time = document.querySelector("#time");
-  const input_location = document.querySelector("#location");
-  const input_category = document.querySelector("#category");
-  const input_max = document.querySelector("#max");
-  const input_save = document.querySelector("#btn_speichern");
+  editedEvent = eventItem;
 
-  input_title.value = eventItem.title;
-  input_description.value = eventItem.beschreibung;
-  input_date.value = eventItem.datum;
-  input_time.value = eventItem.uhrzeit;
-  input_location.value = eventItem.ort;
-  input_category.value = eventItem.kategorie;
-  input_max.value = eventItem.maxTeilnehmer;
-
-  input_save.addEventListener("click", () => {
-    eventItem.title = input_title.value;
-    eventItem.beschreibung = input_description.value;
-    eventItem.datum = input_date.value;
-    eventItem.uhrzeit = input_time.value;
-    eventItem.ort = input_location.value;
-    eventItem.kategorie = input_category.value;
-    eventItem.maxTeilnehmer = input_max.value;
-    render_events();
-  });
+  document.querySelector("#title").value = eventItem.title;
+  document.querySelector("#description").value = eventItem.beschreibung;
+  document.querySelector("#date").value = eventItem.datum;
+  document.querySelector("#time").value = eventItem.uhrzeit;
+  document.querySelector("#location").value = eventItem.ort;
+  document.querySelector("#category").value = eventItem.kategorie;
+  document.querySelector("#max").value = eventItem.maxTeilnehmer;
 }
+
+input_save.addEventListener("click", () => {
+  const input_title = document.querySelector("#title").value;
+  const input_description = document.querySelector("#description").value;
+  const input_date = document.querySelector("#date").value;
+  const input_time = document.querySelector("#time").value;
+  const input_location = document.querySelector("#location").value;
+  const input_category = document.querySelector("#category").value;
+  const input_max = Number(document.querySelector("#max").value);
+
+  if (editedEvent) {
+    editedEvent.title = input_title;
+    editedEvent.beschreibung = input_description;
+    editedEvent.datum = input_date;
+    editedEvent.uhrzeit = input_time;
+    editedEvent.ort = input_location;
+    editedEvent.kategorie = input_category;
+    editedEvent.maxTeilnehmer = input_max;
+
+    saveEvents();
+    render_events();
+
+    modal.close();
+    resetForm();
+
+    return;
+  } else {
+    const newEvent = {
+      eventId: Date.now(),
+      title: input_title,
+      beschreibung: input_description,
+      datum: input_date,
+      uhrzeit: input_time,
+      ort: input_location,
+      kategorie: input_category,
+      maxTeilnehmer: input_max,
+      aktuellTeilnehmer: 0,
+      status: "offen",
+    };
+
+    events.push(newEvent);
+    editedEvent = null;
+    saveEvents();
+    render_events();
+
+    modal.close();
+    resetForm();
+  }
+});
 
 function resetForm() {
   document.querySelector("#title").value = "";
@@ -215,3 +388,49 @@ function resetForm() {
   document.querySelector("#category").value = "";
   document.querySelector("#max").value = "";
 }
+
+// Local Storage Functionen
+
+function saveEvents() {
+  localStorage.setItem("events", JSON.stringify(events));
+}
+
+function loadEvents() {
+  const gespeicherte_daten = localStorage.getItem("events");
+
+  if (gespeicherte_daten) {
+    events = JSON.parse(gespeicherte_daten);
+  }
+}
+
+// Sortier Flow
+
+const sortier_btn = document.querySelector("#sortier-input");
+
+sortier_btn.addEventListener("change", () => {
+  if (sortier_btn.value === "title") {
+    events.sort((a, b) => {
+      return a.title.localeCompare(b.title);
+    });
+    render_events();
+    saveEvents(); //
+  } else if (sortier_btn.value === "teilnehmer") {
+    events.sort((a, b) => {
+      return a.aktuellTeilnehmer - b.aktuellTeilnehmer;
+    });
+    render_events();
+    saveEvents();
+  } else if (sortier_btn.value === "aufsteigend") {
+    events.sort((a, b) => {
+      return new Date(a.datum) - new Date(b.datum);
+    });
+    render_events();
+    saveEvents();
+  } else if (sortier_btn.value === "absteigend") {
+    events.sort((a, b) => {
+      return new Date(b.datum) - new Date(a.datum);
+    });
+    render_events();
+    saveEvents();
+  }
+});
