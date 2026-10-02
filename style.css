@@ -1,0 +1,27 @@
+/* JS Klassen */
+
+.badge-offen {
+  border: 0.2rem solid rgb(9, 218, 9);
+  background-color: rgba(9, 218, 9, 0.267);
+  display: inline;
+  text-transform: uppercase;
+  font-weight: 600;
+  text-align: center;
+}
+
+.badge-ausgebucht {
+  border: 0.2rem solid rgba(255, 50, 50, 0.74);
+  background-color: rgba(250, 65, 65, 0.418);
+  display: inline;
+  text-transform: uppercase;
+  font-weight: 600;
+  text-align: center;
+}
+
+.modal-box {
+  background: rgb(197, 191, 195);
+  padding: 18px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px #0001;
+}

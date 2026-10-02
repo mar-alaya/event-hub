@@ -32,27 +32,27 @@
               <dialog id="my_modal_1" class="modal">
                 <div class="modal-box">
                   <form method="dialog" id="eventForm">
-                    <div>
+                    <div class="m-2">
                       <label for="title">Titel</label>
                       <input type="text" id="title" />
                     </div>
-                    <div>
+                    <div class="m-2">
                       <label for="description">Beschreibung</label>
                       <textarea id="description"></textarea>
                     </div>
-                    <div>
+                    <div class="m-2">
                       <label for="date">Datum</label>
                       <input type="date" id="date" />
                     </div>
-                    <div>
+                    <div class="m-2">
                       <label for="time">Uhrzeit</label>
                       <input type="time" id="time" />
                     </div>
-                    <div>
+                    <div class="m-2">
                       <label for="location">Ort</label>
                       <input type="text" id="location" />
                     </div>
-                    <div>
+                    <div class="m-2">
                       <label for="category">Kategorie</label>
                       <select id="category">
                         <option value="">Bitte auswählen</option>
@@ -63,13 +63,19 @@
                         <option value="Intern">Intern</option>
                       </select>
                     </div>
-                    <div>
+                    <div class="m-2">
                       <label for="max">Maximale Teilnehmer</label>
                       <input type="number" id="max" min="1" />
                       <p id="error"></p>
                     </div>
-                    <button id="btn_abbrechen" class="btn">Abbrechen</button>
-                    <button type="submit" id="btn_speichern" class="btn">
+                    <button id="btn_abbrechen" class="btn btn-error">
+                      Abbrechen
+                    </button>
+                    <button
+                      type="submit"
+                      id="btn_speichern"
+                      class="btn bg-[#bca1eb]"
+                    >
                       Speichern
                     </button>
                   </form>
@@ -98,7 +104,7 @@
     </header>
 
     <main>
-      <section id="dashboard">
+      <section id="dashboard" class="dashboard text-center">
         <div class="stats shadow">
           <div class="stat place-items-center">
             <div class="stat-title">Gesamtzahl Events</div>
@@ -122,55 +128,73 @@
         </div>
       </section>
 
-      <section>
-        <div>
-          <label class="input">
-            <svg
-              class="h-[1em] opacity-50"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-            >
-              <g
-                stroke-linejoin="round"
-                stroke-linecap="round"
-                stroke-width="2.5"
-                fill="none"
-                stroke="currentColor"
+      <div class="flex items-center justify-center m-4 gap-4">
+        <section>
+          <div>
+            <label class="input">
+              <svg
+                class="h-[1em] opacity-50"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
               >
-                <circle cx="11" cy="11" r="8"></circle>
-                <path d="m21 21-4.3-4.3"></path>
-              </g>
-            </svg>
-            <input id="suchen" type="search" placeholder="Suche Event" />
-          </label>
-        </div>
-      </section>
+                <g
+                  stroke-linejoin="round"
+                  stroke-linecap="round"
+                  stroke-width="2.5"
+                  fill="none"
+                  stroke="currentColor"
+                >
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="m21 21-4.3-4.3"></path>
+                </g>
+              </svg>
+              <input id="suchen" type="search" placeholder="Suche Event" />
+            </label>
+          </div>
+        </section>
 
-      <section id="event-sortieren">
-        <label for="category">Events sortieren:</label>
-        <select id="sortier-input">
-          <option value="" selected>Bitte auswählen</option>
-          <option value="aufsteigend">Datum aufsteigend</option>
-          <option value="absteigend">Datum absteigend</option>
-          <option value="title">Title A-Z</option>
-          <option value="teilnehmer">Teilnehmer Anzahl</option>
-        </select>
-      </section>
+        <section id="event-sortieren">
+          <select
+            class="select [&::picker(select)]:max-h-26"
+            id="sortier-input"
+          >
+            <option disabled selected>Sortieren nach</option>
+            <option value="" selected>Alle anzeigen</option>
+            <option value="aufsteigend">Datum aufsteigend</option>
+            <option value="absteigend">Datum absteigend</option>
+            <option value="title">Title A-Z</option>
+            <option value="teilnehmer">Teilnehmer Anzahl</option>
+          </select>
+        </section>
 
-      <!-- Filter -->
-      <section class="my-4">
-        <select id="categoryFilter" class="select">
-          <option value="alle">Alle Kategorien</option>
-          <option value="Workshop">Workshop</option>
-          <option value="Meetup">Meetup</option>
-          <option value="Schulung">Schulung</option>
-          <option value="Networking">Networking</option>
-          <option value="Intern">Intern</option>
-        </select>
-      </section>
+        <!-- Filter -->
+        <section class="filters">
+          <select
+            id="categoryFilter"
+            class="select [&::picker(select)]:max-h-26"
+          >
+            <option value="alle">Alle Kategorien</option>
+            <option value="Workshop">Workshop</option>
+            <option value="Meetup">Meetup</option>
+            <option value="Schulung">Schulung</option>
+            <option value="Networking">Networking</option>
+            <option value="Intern">Intern</option>
+          </select>
+        </section>
+        <section>
+          <select id="statusFilter" class="select [&::picker(select)]:max-h-26">
+            <option value="alle" selected>Alle Status</option>
+            <option value="offen">Offen</option>
+            <option value="ausgebucht">Ausgebucht</option>
+          </select>
+        </section>
+      </div>
 
       <section>
-        <div id="events-container"></div>
+        <div
+          id="events-container"
+          class="flex flex-wrap justify-center items-center gap-5"
+        ></div>
       </section>
     </main>
 

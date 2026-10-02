@@ -110,6 +110,8 @@ const dashTeilnehmerText = document.querySelector("#dashTeilnehmer");
 const dashVollText = document.querySelector("#dashVoll");
 const categoryFilter = document.querySelector("#categoryFilter");
 categoryFilter.addEventListener("change", render_events);
+const statusFilter = document.querySelector("#statusFilter");
+statusFilter.addEventListener("change", render_events);
 
 loadEvents();
 render_events();
@@ -165,14 +167,21 @@ function render_events() {
     return kategorie === "alle" || event.kategorie === kategorie;
   });
 
-  if (gefiltert.length === 0) {
+  const status = statusFilter.value;
+  const nachStatus = gefiltert.filter((event) => {
+    return status === "alle" || event.status.toLowerCase() === status;
+  });
+
+  // Status Filter
+
+  if (nachStatus.length === 0) {
     const keine_treffer = document.createElement("p");
     keine_treffer.innerText = "Keine Events gefunden.";
     eventContainer.appendChild(keine_treffer);
     return;
   }
 
-  gefiltert.forEach((event) => {
+  nachStatus.forEach((event) => {
     const card = generate_event_card(event);
     eventContainer.appendChild(card);
   });
@@ -195,15 +204,24 @@ function generate_event_card(eventItem) {
   } = eventItem;
 
   const event_card = document.createElement("div");
-  event_card.classList.add("card", "w-96", "card-lg", "shadow-sm");
+  event_card.classList.add(
+    "card",
+    "w-96",
+    "card-lg",
+    "shadow-sm",
+    "text-center",
+    "bg-base-300",
+    "p-4",
+  );
 
   const h2 = document.createElement("h2");
   h2.innerText = title;
-  h2.classList.add("card-title");
+  h2.classList.add("text-center", "font-bold", "text-2xl", "m-2");
   event_card.appendChild(h2);
 
   const besch = document.createElement("p");
   besch.innerText = beschreibung;
+  besch.classList.add("text-center", "font-semibold", "text-xl", "mb-2");
   event_card.appendChild(besch);
 
   const dat = document.createElement("p");
@@ -242,7 +260,7 @@ function generate_event_card(eventItem) {
 
   const bearb_btn = document.createElement("button");
   bearb_btn.innerText = "Bearbeiten";
-  bearb_btn.classList.add("btn");
+  bearb_btn.classList.add("btn", "bg-yellow-200");
   event_card.appendChild(bearb_btn);
 
   bearb_btn.addEventListener("click", () => {
@@ -275,7 +293,7 @@ function generate_event_card(eventItem) {
 
   const add_participants = document.createElement("button");
   add_participants.innerText = "+ Teilnehmer";
-  add_participants.classList.add("btn");
+  add_participants.classList.add("btn", "bg-primary-content", "font-bold");
   event_card.appendChild(add_participants);
 
   add_participants.addEventListener("click", () => {
@@ -295,7 +313,7 @@ function generate_event_card(eventItem) {
 
   const quit_participants = document.createElement("button");
   quit_participants.innerText = "- Teilnehmer";
-  quit_participants.classList.add("btn");
+  quit_participants.classList.add("btn", "bg-secondary-content", "font-bold");
   event_card.appendChild(quit_participants);
 
   quit_participants.addEventListener("click", () => {
